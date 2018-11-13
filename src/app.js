@@ -1,26 +1,27 @@
 require('dotenv-extended').load();
-const mongoose = require('mongoose');
-const request = require('request');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-// Connect to mongodb
-const DB_URL = 'mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO_DATABASE;
-mongoose.connect(DB_URL, { useNewUrlParser: true });
-mongoose.Promise = global.Promise;
+// Init new application
+const app = express();
 
-// When successfully connected
-mongoose.connection.on('connected', function (db) {
-    console.log('Mongoose default connection open to ' + DB_URL);
+// Setup mongodb connection
+require('./utils/mongo');
+
+// Initialize body parser
+app.use(bodyParser.json());
+
+// Initialize routes
+app.use('/api/rule', require('./routes/rules'));
+app.use('/api/market', require('./routes/markets'));
+app.use('/api/symbol', require('./routes/symbol'));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    res.status(422).send({ error: err.message });
 });
 
-// If the connection throws an error
-mongoose.connection.on('error', function (err) {
-    console.log('Mongoose default connection error: ' + err);
-});
-
-// If the Node process ends, close the Mongoose connection 
-process.on('SIGINT', function () {
-    mongoose.connection.close(function () {
-        console.log('Mongoose default connection disconnected through app termination');
-        process.exit(0);
-    });
+// Start the application
+app.listen(process.env.HTTP_PORT, () => {
+    console.log('Server is running on port ' + process.env.HTTP_PORT);
 });
