@@ -1,14 +1,26 @@
-const CronJob = require('cron').CronJob;
+require('dotenv-extended').load();
+const mongoose = require('mongoose');
+const request = require('request');
 
-try {
-    console.log('Before job initialize');
-    const processJob = new CronJob('*/10 * * * * *', () => {
-        const d = new Date();
-        console.log('Every 10th seconds: ', d);
+// Connect to mongodb
+const DB_URL = 'mongodb://' + process.env.MONGO_HOST + '/' + process.env.MONGO_DATABASE;
+mongoose.connect(DB_URL, { useNewUrlParser: true });
+mongoose.Promise = global.Promise;
+
+// When successfully connected
+mongoose.connection.on('connected', function (db) {
+    console.log('Mongoose default connection open to ' + DB_URL);
+});
+
+// If the connection throws an error
+mongoose.connection.on('error', function (err) {
+    console.log('Mongoose default connection error: ' + err);
+});
+
+// If the Node process ends, close the Mongoose connection 
+process.on('SIGINT', function () {
+    mongoose.connection.close(function () {
+        console.log('Mongoose default connection disconnected through app termination');
+        process.exit(0);
     });
-    console.log('After job initialize');
-    processJob.start();
-    console.log('Is job running? ', processJob.running);
-} catch (error) {
-    console.log('Run cron error occured');
-}
+});
