@@ -12,9 +12,7 @@ require('./utils/mongo');
 app.use(bodyParser.json());
 
 // Initialize routes
-app.use('/api/rule', require('./routes/rules'));
-app.use('/api/market', require('./routes/markets'));
-app.use('/api/symbol', require('./routes/symbol'));
+app.use('/api/targetprice', require('./routes/ruleTargetPrice'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const market = require('../models/markets');
+const rule = require('../models/ruleTargetPrice');
 
-// Add new market
+// Add new TargetPrice rule record
 router.post('/post', (req, res, next) => {
-    market.create(req.body).then((record) => {
+    rule.create(req.body).then((record) => {
         res.status(201).send(record);
     }).catch(next);
 });
 
-// Get existing market
+// Get all TargetPrice rule records
 router.get('/get', (req, res, next) => {
-    if (req.query.name !== undefined) {
-        market.findOne({ 'name': req.query.name }).then((records) => {
+    if (req.query.user !== undefined) {
+        rule.findOne({ 'user': req.query.user }).then((records) => {
             if (records === null)
                 return res.send({ result: 'Requested data was not found' });
             else
@@ -20,24 +20,24 @@ router.get('/get', (req, res, next) => {
         }).catch(next);
     }
     else {
-        market.find().then((records) => {
+        rule.find().then((records) => {
             res.status(200).send(records);
         }).catch(next);
     }
 });
 
-// Update existing market (full update)
+// Update specific TargetPrice rule record
 router.put('/put/:id', (req, res, next) => {
-    market.findByIdAndUpdate({ _id: req.params.id }, req.body).then(() => {
-        market.findOne({ _id: req.params.id }).then((record) => {
+    rule.findByIdAndUpdate({ _id: req.params.id }, req.body).then(() => {
+        rule.findOne({ _id: req.params.id }).then((record) => {
             res.status(200).send(record);
         });
     }).catch(next);
 });
 
-// Remove existing market
+// Remove specific TargetPrice rule record
 router.delete('/delete/:id', (req, res, next) => {
-    market.findByIdAndRemove({ _id: req.params.id }).then((record) => {
+    rule.findByIdAndRemove({ _id: req.params.id }).then((record) => {
         res.send(record);
     }).catch(next);
 });
