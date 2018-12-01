@@ -12,7 +12,7 @@ router.post('/post', (req, res, next) => {
 // Get all TargetPrice rule records
 router.get('/get', (req, res, next) => {
     if (req.query.user !== undefined) {
-        rule.findOne({ 'user': req.query.user }).then((records) => {
+        rule.find({ 'user': req.query.user }).then((records) => {
             if (records === null)
                 return res.send({ result: 'Requested data was not found' });
             else
