@@ -1,12 +1,20 @@
 require('dotenv-extended').load();
 const express = require('express');
 const bodyParser = require('body-parser');
+const basicAuth = require('express-basic-auth');
 
 // Init new application
 const app = express();
 
 // Setup mongodb connection
 require('./utils/mongo');
+
+// Setup basic auth check
+const { checkUserPassword } = require('./utils/auth');
+app.use(basicAuth({
+    authorizer: checkUserPassword,
+    unauthorizedResponse: 'It looks like you have provided wrong auth credentials'
+}));
 
 // Initialize body parser
 app.use(bodyParser.json());
