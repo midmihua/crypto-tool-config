@@ -8,6 +8,7 @@ const TargetPriceSchema = new Schema({
         market: { type: String, required: true },
         symbol: { type: String, required: true },
         targetPrice: { type: Number, required: true },
+        positionPrice: { type: Number, default: 0 },
         direction: { type: String, enum: ['>=', '<='], default: '>=', required: true },
         retry: { type: Number, default: 1, required: true }
     },
