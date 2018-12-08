@@ -10,7 +10,8 @@ const TargetPriceSchema = new Schema({
         targetPrice: { type: Number, required: true },
         positionPrice: { type: Number, default: 0 },
         direction: { type: String, enum: ['>=', '<='], default: '>=', required: true },
-        retry: { type: Number, default: 1, required: true }
+        retry: { type: Number, default: 1, required: true },
+        description: { type: String, required: false }
     },
     sendTo: {
         token: String,
